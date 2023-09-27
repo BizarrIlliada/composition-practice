@@ -7,20 +7,16 @@ export default function useSort(availableItems, key) {
     if (!sorting.value) {
       return availableItems.value;
     }
+
+    switch (sorting.value) {
+      case 'asc':
+        return [...availableItems.value].sort((item1, item2) => item1[key].localeCompare(item2[key]));
+      case 'desc':
+        return [...availableItems.value].sort((item1, item2) => item2[key].localeCompare(item1[key]));
     
-    return availableItems.value.slice().sort((user1, user2) => {
-      if (sorting.value === 'asc' && user1[key] > user2[key]) {
-        console.log(displayedUsers.value);
-        console.log(123);
-        return 1;
-      } else if (sorting.value === 'asc') {
-        return -1;
-      } else if (sorting.value === 'desc' && user1[key] > user2[key]) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
+      default:
+        return availableItems;
+    }
   });
   
   function sort(mode) {

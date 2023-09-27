@@ -8,7 +8,7 @@ export default function useSearch(itemsArray, key) {
     let filteredItems = [];
 
     if (activeSearchTerm.value) {
-      filteredItems = itemsArray.value.filter(item => item[key].toLowerCase().includes(activeSearchTerm.value.toLowerCase()));
+      filteredItems = itemsArray.value.filter(item => item[key].includes(activeSearchTerm.value));
     } else {
       filteredItems = itemsArray.value;
     }

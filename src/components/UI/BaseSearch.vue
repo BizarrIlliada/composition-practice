@@ -1,18 +1,13 @@
 <template>
   <form>
-    <input type="text" @input="search" :value="searchTerm" placeholder="Filter items" />
+    <input type="search" @input="search" :value="searchTerm" placeholder="Filter items" />
   </form>
 </template>
 
 <script setup>
 import { defineProps, defineEmits, watch } from 'vue';
 
-const props = defineProps({
-  searchTerm: {
-    type: String,
-    required: false,
-  }
-});
+const props = defineProps(['searchTerm']);
 
 watch(props, () => {
   console.log(props);
