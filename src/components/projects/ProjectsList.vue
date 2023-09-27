@@ -13,82 +13,22 @@
 </template>
 
 <script setup>
+import { computed, defineProps, toRefs, watch } from 'vue';
 import ProjectItem from './ProjectItem.vue';
-
-import { computed, defineProps, ref, watch } from 'vue';
+import useSearch from '../../hooks/search.js';
 
 const props = defineProps(['user']);
-const enteredSearchTerm = ref('');
-const activeSearchTerm = ref('');
+const { user } = toRefs(props);
 
-const hasProjects = computed(() => props.user.projects && availableProjects.value.length > 0);
-const availableProjects = computed(() => {
-  if (activeSearchTerm.value) {
-    return props.user.projects.filter((project) => project.title.toLowerCase().includes(activeSearchTerm.value.toLowerCase()));
-  }
+const projects = computed(() => user.value ? user.value.projects : []);
 
-  return props.user.projects;
+const { enteredSearchTerm, availableItems: availableProjects, updateSearch } = useSearch(projects, 'title');
+
+const hasProjects = computed(() => projects.value.length && availableProjects.value.length > 0);
+
+watch(user, () => {
+  updateSearch('');
 });
-
-function updateSearch(val) {
-  enteredSearchTerm.value = val;
-}
-
-watch(enteredSearchTerm, (newVal) => {
-  setTimeout(() => {
-    if (newVal === enteredSearchTerm.value) {
-      activeSearchTerm.value = newVal;
-    }
-  }, 300);
-});
-
-watch(props, () => {
-  enteredSearchTerm.value = '';
-  console.log(props);
-});
-
-// export default {
-//   components: {
-//     ProjectItem,
-//   },
-//   props: ['user'],
-//   data() {
-//     return {
-//       enteredSearchTerm: '',
-//       activeSearchTerm: '',
-//     };
-//   },
-//   computed: {
-//     hasProjects() {
-//       return this.user.projects && this.availableProjects.length > 0;
-//     },
-//     availableProjects() {
-//       if (this.activeSearchTerm) {
-//         return this.user.projects.filter((prj) =>
-//           prj.title.includes(this.activeSearchTerm)
-//         );
-//       }
-//       return this.user.projects;
-//     },
-//   },
-//   methods: {
-//     updateSearch(val) {
-//       this.enteredSearchTerm = val;
-//     },
-//   },
-//   watch: {
-//     enteredSearchTerm(val) {
-//       setTimeout(() => {
-//         if (val === this.enteredSearchTerm) {
-//           this.activeSearchTerm = val;
-//         }
-//       }, 300);
-//     },
-//     user() {
-//       this.enteredSearchTerm = '';
-//     },
-//   },
-// };
 </script>
 
 <style scoped>
